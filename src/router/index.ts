@@ -1,0 +1,21 @@
+import { createRouter, createWebHistory } from "vue-router";
+import ConsoleMenu from "../views/ConsoleMenu.vue";
+import SourceView from "../views/SourceView.vue";
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: "/",
+      name: "console",
+      component: ConsoleMenu,
+    },
+    {
+      path: "/source/:id",
+      name: "source",
+      component: SourceView,
+    },
+  ],
+});
+
+export default router;
