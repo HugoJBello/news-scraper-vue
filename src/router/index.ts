@@ -11,7 +11,7 @@ const router = createRouter({
       component: ConsoleMenu,
     },
     {
-      path: "/source/:id",
+      path: "/source/:newspaper",
       name: "source",
       component: SourceView,
     },

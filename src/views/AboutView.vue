@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import SourceMenu from "../components/SourceMenu.vue";
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <main>
