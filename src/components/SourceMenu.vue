@@ -1,25 +1,29 @@
 <template>
-  <div>setup {{ newspaper }}</div>
+  <div>
+    <div>setup {{ newspaper }}</div>
+    <li v-for="item in news">- {{ item.headline }}</li>
+  </div>
 </template>
 
 <style scoped></style>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { getAllIndexes } from "../services/apiService";
+import { findNewsInDay } from "../services/apiService";
 
 export default defineComponent({
   data() {
     return {
-      id: this.$route.params.newspaper,
-      indexes: [],
+      newspaper: this.$route.params.newspaper,
+      news: [],
     };
   },
   methods: {
     async getData() {
       try {
-        this.indexes = await getAllIndexes();
-        console.log(this.indexes);
+        const newspaper = this.newspaper.replace("_", ".");
+        this.news = await findNewsInDay(newspaper as string, new Date(), 2);
+        console.log(this.news);
       } catch (error) {
         console.log(error);
       }

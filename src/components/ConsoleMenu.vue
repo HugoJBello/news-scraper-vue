@@ -18,7 +18,7 @@ export default defineComponent({
     async getData() {
       try {
         const indexes = await getAllIndexes();
-        this.indexes = indexes
+        this.indexes = indexes;
       } catch (error) {
         console.log(error);
       }
