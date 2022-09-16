@@ -10,12 +10,13 @@
 import { defineComponent } from "vue";
 import { getNewsItem } from "../services/apiService";
 //ab1c7ddb-a19c-49a9-b80e-a53e7db5e91c
+import type { NewScrapedI } from "@/models/NewScraped";
 
 export default defineComponent({
   data() {
     return {
       id: this.$route.params.id,
-      newsItem: {},
+      newsItem: {} as NewScrapedI,
     };
   },
   methods: {

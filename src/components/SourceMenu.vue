@@ -1,27 +1,52 @@
 <template>
   <div>
     <div>setup {{ newspaper }}</div>
-    <li v-for="item in news">- {{ item.headline }}</li>
+    <div
+      class="card mb-3 centered"
+      style="max-width: 1200px"
+      v-if="news"
+      v-for="item in news"
+    >
+      <div class="row g-0">
+        <div class="col-md-4">
+          <img :src="item.image" class="img-fluid img-thumbnail"/>
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">{{ item.headline }}</h5>
+            <p class="card-text">{{ item.description }}</p>
+            <p class="card-text">
+              <small class="text-muted">{{ item.date }}</small>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.centered{
+     margin: 0 auto;
+  }
+</style>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import { findNewsInDay } from "../services/apiService";
+import type { NewScrapedI } from "@/models/NewScraped";
 
 export default defineComponent({
   data() {
     return {
       newspaper: this.$route.params.newspaper,
-      news: [],
+      news: [] as NewScrapedI[],
     };
   },
   methods: {
     async getData() {
       try {
-        const newspaper = this.newspaper.replace("_", ".");
+        const newspaper = (this.newspaper as string).replace("_", ".");
         this.news = await findNewsInDay(newspaper as string, new Date(), 2);
         console.log(this.news);
       } catch (error) {
