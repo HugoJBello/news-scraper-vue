@@ -1,6 +1,16 @@
 <template>
   <div>
     <div class="card_container">
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <span class="navbar-brand">
+    <img :src="sourceInfo.logoUrl" class="img-logo" />
+
+    </span>
+     </div>
+</nav>
+
       <h1 class="h1 title">{{ sourceInfo.newspaper }}</h1>
       <div
         class="card mb-3 centered"
@@ -28,6 +38,9 @@
 </template>
 
 <style scoped lang="scss">
+.img-logo{
+  max-height: 30px
+}
 .centered {
   margin: 0 auto;
 }
@@ -68,7 +81,7 @@ export default defineComponent({
         this.sourceInfo = sourceInfoDecider(this.newspaper as string)
         console.log(this.sourceInfo)
         const newspaper = (this.newspaper as string).replace("_", ".");
-        this.news = await findNewsInDay(newspaper as string, new Date(), 2);
+        this.news = await findNewsInDay(newspaper as string, new Date(), 1);
         console.log(this.news);
       } catch (error) {
         console.log(error);

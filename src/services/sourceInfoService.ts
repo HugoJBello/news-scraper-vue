@@ -25,7 +25,7 @@ export const sourceInfoDecider = (newspaper: string): SourceInfo => {
     return sourceInfoEldiarioEs;
   } else if (newspaper.includes("guardian")) {
     return sourceTheGuardian;
-  } else if (newspaper.includes("newyourktimes")) {
+  } else if (newspaper.includes("newyorktimes")) {
     return sourceInfoNewYorkTimes;
   }
 
