@@ -63,7 +63,7 @@ export default defineComponent({
   },
   data() {
     return {
-      newspaper: this.$route.params.newspaper,
+      newspaper: this.$route.params.newspaper as string,
       news: [] as NewScrapedI[],
     };
   },

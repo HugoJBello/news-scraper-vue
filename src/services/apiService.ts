@@ -1,17 +1,18 @@
 //https://walrus-app-kitxm.ondigitalocean.app/news-scraper-api2/api/v1/newScraped/findQuery?newspaper=eldiario.es&limit=8888&orderByParam=createdAt&orderDirection=ASC
 import type { NewScrapedI } from "@/models/NewScraped";
+import type { ScrapingIndexI } from "@/models/ScrapingIndex";
 import axios from "axios";
 import { get } from "lodash";
 
 const baseUrl =
   "https://walrus-app-kitxm.ondigitalocean.app/news-scraper-api2/api/v1/";
 
-export const getAllIndexes = async () => {
+export const getAllIndexes = async (): Promise<ScrapingIndexI[]> => {
   const url =
     baseUrl +
     "scrapingIndex/findQuery?&limit=99999&orderByParam=createdAt&orderDirection=ASC";
   const resp = await axios.get(url);
-  return get(resp, "data.payload.rows");
+  return get(resp, "data.payload.rows") as ScrapingIndexI[];
 };
 
 export const getNewsItem = async (id: string): Promise<NewScrapedI> => {
