@@ -16,7 +16,8 @@
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+
 .container {
   margin: 0 auto;
   max-width: 100 px;
