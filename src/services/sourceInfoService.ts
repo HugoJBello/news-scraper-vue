@@ -2,12 +2,18 @@ export interface SourceInfo {
   newspaper: string;
   url?: string;
   logoUrl: string;
+  category?:string;
 }
 
 const sourceInfoEldiarioEs: SourceInfo = {
   newspaper: "eldiario.es",
   logoUrl:
     "https://www.eldiario.es/assets/img/logos/Logo10.png?id=6aac8c355a548fc7b856",
+};
+const sourceInfoPublico: SourceInfo = {
+  newspaper: "publico",
+  logoUrl:
+    "https://upload.wikimedia.org/wikipedia/commons/9/96/Logo_publico.svg",
 };
 const sourceTheGuardian: SourceInfo = {
   newspaper: "theguardian",
@@ -27,6 +33,8 @@ export const sourceInfoDecider = (newspaper: string): SourceInfo => {
     return sourceTheGuardian;
   } else if (newspaper.includes("newyorktimes")) {
     return sourceInfoNewYorkTimes;
+  } else if (newspaper.includes("publico")) {
+    return sourceInfoPublico;
   }
 
   return { newspaper: newspaper } as SourceInfo;
