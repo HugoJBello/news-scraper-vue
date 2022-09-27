@@ -43,7 +43,8 @@ export const findNewsInDay = async (
     "&day=" +
     date +
     "&daysInterval=" +
-    daysInterval;
+    daysInterval +
+    "&orderCriteria=priority";
   const resp = await axios.get(url);
 
   return get(resp, "data.payload.rows") as NewScrapedI[];
