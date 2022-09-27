@@ -71,7 +71,12 @@ export default defineComponent({
     async getData() {
       try {
         const newspaper = (this.newspaper as string).replace("_", ".");
-        this.news = await findNewsInDay(newspaper as string, new Date(), 1);
+        
+        const today = new Date()
+        const tomorrow = new Date(today)
+        tomorrow.setDate(tomorrow.getDate() + 1)
+
+        this.news = await findNewsInDay(newspaper as string, tomorrow, 2);
         console.log(this.news);
       } catch (error) {
         console.log(error);
