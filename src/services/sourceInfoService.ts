@@ -39,3 +39,8 @@ export const sourceInfoDecider = (newspaper: string): SourceInfo => {
 
   return { newspaper: newspaper } as SourceInfo;
 };
+
+
+export const getAllSources = (): SourceInfo[] => {
+   return [sourceInfoEldiarioEs, sourceInfoPublico, sourceTheGuardian, sourceInfoNewYorkTimes]
+};

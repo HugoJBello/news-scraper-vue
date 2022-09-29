@@ -14,16 +14,14 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav" >
           <li class="nav-item">
-            <RouterLink class="nav-link" to="/">Console</RouterLink>
+            <RouterLink class="nav-link" to="/">Sources</RouterLink>
           </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/source/a">Source</RouterLink>
+          <li class="nav-item" v-if="sourcesInfo" v-for="item in sourcesInfo">
+            <RouterLink class="nav-link" :to="getlink(item)">{{item.newspaper}}</RouterLink>
           </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/source">Source</RouterLink>
-          </li>
+          
         </ul>
       </div>
     </div>
@@ -33,10 +31,34 @@
 <style scoped></style>
 <script lang="ts">
 import { defineComponent } from "vue";
+import type { SourceInfo } from "../services/sourceInfoService";
+
+import { getAllSources } from "../services/sourceInfoService";
 
 export default defineComponent({
+  props: {
+    newspaper: String,
+  },
   data() {
-    return {};
+    return {
+      sourcesInfo: undefined as SourceInfo[]|undefined,
+    };
+  },
+  methods: {
+    async getData() {
+        this.sourcesInfo = getAllSources();
+        console.log("----------", this.sourcesInfo);
+        },
+    getlink(source: SourceInfo) {
+      return "/source/" + source.newspaper.replace(".", "_");
+    },
+  },
+
+  created() {
+    this.getData();
+  },
+  updated() {
+    this.getData();
   },
 });
 </script>
