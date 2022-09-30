@@ -55,6 +55,8 @@ import { defineComponent } from "vue";
 import { findNewsInDay } from "../services/apiService";
 import type { NewScrapedI } from "@/models/NewScraped";
 
+import { filterLastIterationOnly } from "../services/newsInDayFilterService";
+
 import NavbarSource from "./NavbarSource.vue";
 
 export default defineComponent({
@@ -77,6 +79,7 @@ export default defineComponent({
         tomorrow.setDate(tomorrow.getDate() + 1)
 
         this.news = await findNewsInDay(newspaper as string, tomorrow, 2);
+        this.news = filterLastIterationOnly(this.news)
         console.log(this.news);
       } catch (error) {
         console.log(error);
