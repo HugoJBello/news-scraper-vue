@@ -17,8 +17,8 @@
               <div class="card-body">
                 <h5 class="card-title">{{ item.headline }}</h5>
                 <p class="card-text">{{ item.description }}</p>
-                 <p class="text-muted">
-                    <small class="date">{{ item.date }}</small>
+                <p class="text-muted">
+                  <small class="date">{{ item.date }}</small>
                   <small class="other">{{ item.newsIndex }}</small>
                 </p>
               </div>
@@ -31,8 +31,8 @@
 </template>
 
 <style scoped lang="scss">
-.other{
-  margin-left:3px;
+.other {
+  margin-left: 3px;
 }
 .img-logo {
   max-height: 30px;
@@ -56,12 +56,13 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { findNewsInDay } from "../services/apiService";
+import { findNewsInDay, getIndex } from "../services/apiService";
 import type { NewScrapedI } from "@/models/NewScraped";
 
-import { filterLastIterationOnly } from "../services/newsInDayFilterService";
+import { findCurrentNewsUsingIndex } from "../services/newsInDayFilterService";
 
 import NavbarSource from "./NavbarSource.vue";
+import type { ScrapingIndexI } from "@/models/ScrapingIndex";
 
 export default defineComponent({
   components: {
@@ -71,19 +72,22 @@ export default defineComponent({
     return {
       newspaper: this.$route.params.newspaper as string,
       news: [] as NewScrapedI[],
+      index: {} as ScrapingIndexI,
     };
   },
+  
   methods: {
     async getData() {
       try {
         const newspaper = (this.newspaper as string).replace("_", ".");
-        
-        const today = new Date()
-        const tomorrow = new Date(today)
-        tomorrow.setDate(tomorrow.getDate() + 1)
+
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
 
         this.news = await findNewsInDay(newspaper as string, tomorrow, 2);
-        this.news = filterLastIterationOnly(this.news)
+        this.index = await getIndex(newspaper);
+        this.news = findCurrentNewsUsingIndex(this.news, this.index);
         console.log(this.news);
       } catch (error) {
         console.log(error);
@@ -93,7 +97,12 @@ export default defineComponent({
       return "/sourceItem/" + news.id;
     },
   },
-
+  watch: {
+    newspaper(nneval:string, old:string)  {
+      console.log("aaa")
+      this.getData();
+    },
+  },
   created() {
     this.getData();
   },
