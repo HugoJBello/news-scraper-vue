@@ -13,7 +13,7 @@ export const filterLastIterationOnly = (news: NewScrapedI[]): NewScrapedI[] => {
    //const max = Math.max.apply(null, iterations)
    const max = lastScraped.scrapingIteration
    console.log(max, lastScraped.scrapedAt)
-   const newsFiltered =  news.filter(item => (item.scrapingIteration === max || item.scrapingIteration=== max-1))
+   const newsFiltered =  news.filter(item => (item.scrapingIteration === max || item.scrapingIteration=== max ))
    newsFiltered.sort((a,b)=>{
       return (a.newsIndex as any) - ( b.newsIndex as any);
 

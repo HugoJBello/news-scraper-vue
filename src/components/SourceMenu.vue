@@ -17,8 +17,9 @@
               <div class="card-body">
                 <h5 class="card-title">{{ item.headline }}</h5>
                 <p class="card-text">{{ item.description }}</p>
-                <p class="card-text">
-                  <small class="text-muted">{{ item.date }}</small>
+                 <p class="text-muted">
+                    <small class="date">{{ item.date }}</small>
+                  <small class="other">{{ item.newsIndex }}</small>
                 </p>
               </div>
             </div>
@@ -30,6 +31,9 @@
 </template>
 
 <style scoped lang="scss">
+.other{
+  margin-left:3px;
+}
 .img-logo {
   max-height: 30px;
 }
