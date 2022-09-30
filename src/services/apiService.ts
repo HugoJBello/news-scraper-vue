@@ -17,6 +17,14 @@ export const getAllIndexes = async (): Promise<ScrapingIndexI[]> => {
   return get(resp, "data.payload.rows") as ScrapingIndexI[];
 };
 
+export const getAllScrapers = async (): Promise<string[]> => {
+  const indexes = await getAllIndexes()
+  const scraperIds = indexes.map(item => item.scraperId)
+  const setScraper = new Set(scraperIds)
+ return Array.from(setScraper.values());
+
+};
+
 export const getIndex = async (newspaper: string): Promise<ScrapingIndexI> => {
   const url =
     baseUrl + "scrapingIndex/findQuery?&limit=1&newspaper=" + newspaper;

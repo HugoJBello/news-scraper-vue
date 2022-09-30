@@ -31,7 +31,8 @@ export const findCurrentNewsUsingIndex = (
   index: ScrapingIndexI
 ): NewScrapedI[] => {
   const urls = index.currentScrapingUrlList;
-
+  console.log("-------------")
+  console.log(index)
   const resultArrayInUrl = [] as NewScrapedI[];
 
   for (const url of urls) {
