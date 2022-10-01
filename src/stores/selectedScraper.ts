@@ -5,9 +5,10 @@ export const useSelectedScraperStore = defineStore({
   id: "selectedScraper",
   state: () => ({ selectedScraperId: null as string | null }),
   getters: {
-    getSelectedScraper(): string | null {
-      return this.selectedScraperId;
-    },
+    // automatically infers the return type as a number
+    getSelectedScraper(state): string | null {
+      return state.selectedScraperId
+    }
   },
   actions: {
     selectScraper(scraperId: string) {

@@ -25,13 +25,12 @@
           </li>
 
           <select
-            v-if="allScrapers"
-            v-for="item in allScrapers"
             class="form-select form-select-sm"
             v-model="selectedScraper"
             v-on:change="changeSelected"
           >
-            <option :value="item">{{ item }}</option>
+          <option v-if="allScrapers"
+          v-for="item in allScrapers" :value="item">{{ item }}</option>
           </select>
         </ul>
       </div>
@@ -59,11 +58,13 @@ export default defineComponent({
     };
   },
   methods: {
-    async getData() {
+    async getSources() {
       this.sourcesInfo = getAllSources();
+    },
+    async getScrapers() {
       if (this.allScrapers.length === 0) {
         this.allScrapers = await getAllScrapers();
-        if (this.allScrapers && this.selectedScraper !== "") {
+        if (this.allScrapers) {
           console.log();
           this.selectedScraper = this.allScrapers[0];
         }
@@ -79,10 +80,11 @@ export default defineComponent({
   },
 
   created() {
-    this.getData();
+    this.getSources();
+    this.getScrapers();
   },
   updated() {
-    this.getData();
+    //this.getSources();
   },
 });
 </script>

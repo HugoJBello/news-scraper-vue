@@ -60,6 +60,7 @@ import { findNewsInDay, getIndex } from "../services/apiService";
 import type { NewScrapedI } from "@/models/NewScraped";
 
 import { findCurrentNewsUsingIndex } from "../services/newsInDayFilterService";
+import { useSelectedScraperStore } from "@/stores/selectedScraper";
 
 import NavbarSource from "./NavbarSource.vue";
 import type { ScrapingIndexI } from "@/models/ScrapingIndex";
@@ -67,6 +68,13 @@ import type { ScrapingIndexI } from "@/models/ScrapingIndex";
 export default defineComponent({
   components: {
     NavbarSource,
+  },
+  setup(){
+    const selectedScraper= useSelectedScraperStore()
+    selectedScraper.$onAction(()=>{
+      this.getData()
+    }, true)
+    return {selectedScraper}
   },
   data() {
     return {
@@ -88,6 +96,8 @@ export default defineComponent({
         this.news = await findNewsInDay(newspaper as string, tomorrow, 2);
         this.index = await getIndex(newspaper);
         this.news = findCurrentNewsUsingIndex(this.news, this.index);
+
+        console.log(this.selectedScraper.selectedScraperId)
         console.log(this.news);
       } catch (error) {
         console.log(error);
@@ -98,8 +108,9 @@ export default defineComponent({
     },
   },
   watch: {
-    newspaper(nneval:string, old:string)  {
-      console.log("aaa")
+    selectedScraper(val: string)  {
+      console.log("aaa", val)
+
       this.getData();
     },
   },
