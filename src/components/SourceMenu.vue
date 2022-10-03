@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card_container">
-      <NavbarSource :newspaper="$route.params.newspaper" />
+      <NavbarSource :newspaper="$route.params.newspaper as string" />
       <div
         class="card mb-3 centered"
         style="max-width: 1200px"
@@ -99,10 +99,10 @@ export default defineComponent({
         const tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
 
-        let news = await findNewsInDay(newspaper as string, tomorrow, 3);
+        let news = await findNewsInDay(newspaper as string, tomorrow, 3, undefined);
         news = news.filter (n => n.scraperId === scraperId)
         this.index = await getIndex(newspaper, scraperId);
-        this.news = findCurrentNewsUsingIndex(news, this.index, scraperId);
+        this.news = findCurrentNewsUsingIndex(news, this.index);
 
         console.log(scraperId)
         console.log(this.index, this.news);
@@ -116,7 +116,7 @@ export default defineComponent({
   },
   watch:{
     $route (to, from){
-      this.getData(this.selectedScraper.getSelectedScraper);
+      this.getData(this.selectedScraper.getSelectedScraper as string | undefined);
     }
 },
   created() {
@@ -126,7 +126,7 @@ export default defineComponent({
       this.getData(scraperId)
     }, true)
 
-    this.getData(this.selectedScraper.getSelectedScraper);
+    this.getData(this.selectedScraper.getSelectedScraper as string | undefined);
   },
 });
 </script>

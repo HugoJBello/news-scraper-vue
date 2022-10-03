@@ -21,7 +21,7 @@ export const getAllScrapers = async (): Promise<string[]> => {
   const indexes = await getAllIndexes()
 
   indexes.sort((a, b) => {
-    return (new Date(a.dateScraping) as any) - (new Date(b.dateScraping) as any);
+    return -(new Date(a.dateScraping) as any) + (new Date(b.dateScraping) as any);
   });
 
   const scraperIds = indexes.map(item => item.scraperId)

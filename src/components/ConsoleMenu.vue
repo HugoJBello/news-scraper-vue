@@ -76,7 +76,7 @@ export default defineComponent({
     return {selectedScraper}
   },
   methods: {
-    async getData(scraperId:string) {
+    async getData(scraperId:string | null) {
       try {
         if (scraperId){
           let indexes = await getAllIndexes();
@@ -109,7 +109,7 @@ export default defineComponent({
       this.getData(scraperId)
     }, true)
     
-    this.getData(selectedScraper.getSelectedScraper || this.selectedScraper.scraperId);
+    this.getData(selectedScraper.getSelectedScraper);
   },
 });
 </script>
