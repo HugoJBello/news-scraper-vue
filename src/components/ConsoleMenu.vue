@@ -18,7 +18,7 @@
           <div class="card-body">
             <h5 class="card-title">{{ item.newspaper }}</h5>
             <p class="card-text">
-              <small class="text-muted">{{ item.dateScraping }}</small>
+              <small class="text-muted">{{ item.dateScraping }}</small> <small class="text-muted">{{ item.scraperId }}</small>
             </p>
           </div>
         </div>
@@ -60,9 +60,10 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { getAllIndexes } from "../services/apiService";
+import { getAllIndexes, getAllScrapers } from "../services/apiService";
 import type { ScrapingIndexI } from "@/models/ScrapingIndex";
 import { sourceInfoDecider } from "../services/sourceInfoService";
+import { useSelectedScraperStore } from "@/stores/selectedScraper";
 
 export default defineComponent({
   data() {
@@ -70,11 +71,24 @@ export default defineComponent({
       indexes: [] as ScrapingIndexI[],
     };
   },
+  setup(){
+    const selectedScraper= useSelectedScraperStore()
+    return {selectedScraper}
+  },
   methods: {
-    async getData() {
+    async getData(scraperId:string) {
       try {
-        const indexes = await getAllIndexes();
-        this.indexes = indexes;
+        if (scraperId){
+          let indexes = await getAllIndexes();
+          indexes = indexes.filter(ind => ind.scraperId === scraperId)
+          this.indexes = indexes;
+
+        } else {
+          let indexes = await getAllIndexes();
+          let scrapers = await getAllScrapers();
+          indexes = indexes.filter(ind => ind.scraperId === scrapers[0])
+          this.indexes = indexes;
+        }
       } catch (error) {
         console.log(error);
       }
@@ -86,10 +100,16 @@ export default defineComponent({
       const sourceInfo = sourceInfoDecider(newspaper);
       return sourceInfo.logoUrl;
     },
-  },
-
-  async created() {
-    await this.getData();
+  }, 
+  created() {
+    console.log("created")
+    const selectedScraper= useSelectedScraperStore()
+    selectedScraper.$onAction(({name:selectedScraper, args})=>{
+      const scraperId = args[0]
+      this.getData(scraperId)
+    }, true)
+    
+    this.getData(selectedScraper.getSelectedScraper || this.selectedScraper.scraperId);
   },
 });
 </script>

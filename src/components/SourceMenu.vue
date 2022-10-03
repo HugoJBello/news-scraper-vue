@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card_container">
-      <NavbarSource :newspaper="newspaper" />
+      <NavbarSource :newspaper="$route.params.newspaper" />
       <div
         class="card mb-3 centered"
         style="max-width: 1200px"
@@ -20,6 +20,7 @@
                 <p class="text-muted">
                   <small class="date">{{ item.date }}</small>
                   <small class="other">{{ item.newsIndex }}</small>
+                  <small class="other">{{ item.scraperId }}</small>
                 </p>
               </div>
             </div>
@@ -56,7 +57,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { findNewsInDay, getIndex } from "../services/apiService";
+import { findNewsInDay, getIndex, getAllScrapers } from "../services/apiService";
 import type { NewScrapedI } from "@/models/NewScraped";
 
 import { findCurrentNewsUsingIndex } from "../services/newsInDayFilterService";
@@ -69,36 +70,42 @@ export default defineComponent({
   components: {
     NavbarSource,
   },
+
   setup(){
     const selectedScraper= useSelectedScraperStore()
-    selectedScraper.$onAction(()=>{
-      this.getData()
-    }, true)
     return {selectedScraper}
   },
   data() {
     return {
-      newspaper: this.$route.params.newspaper as string,
       news: [] as NewScrapedI[],
       index: {} as ScrapingIndexI,
     };
   },
   
   methods: {
-    async getData() {
+    async getData(scraperId: string | undefined) {
       try {
-        const newspaper = (this.newspaper as string).replace("_", ".");
+
+        if (!scraperId){
+            let scrapers = await getAllScrapers();
+            scraperId = scrapers[0]
+
+        }
+
+        console.log("getdata ", scraperId)
+        const newspaper = (this.$route.params.newspaper as string).replace("_", ".");
 
         const today = new Date();
         const tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
 
-        this.news = await findNewsInDay(newspaper as string, tomorrow, 2);
-        this.index = await getIndex(newspaper);
-        this.news = findCurrentNewsUsingIndex(this.news, this.index);
+        let news = await findNewsInDay(newspaper as string, tomorrow, 3);
+        news = news.filter (n => n.scraperId === scraperId)
+        this.index = await getIndex(newspaper, scraperId);
+        this.news = findCurrentNewsUsingIndex(news, this.index, scraperId);
 
-        console.log(this.selectedScraper.selectedScraperId)
-        console.log(this.news);
+        console.log(scraperId)
+        console.log(this.index, this.news);
       } catch (error) {
         console.log(error);
       }
@@ -107,15 +114,19 @@ export default defineComponent({
       return "/sourceItem/" + news.id;
     },
   },
-  watch: {
-    selectedScraper(val: string)  {
-      console.log("aaa", val)
-
-      this.getData();
-    },
-  },
+  watch:{
+    $route (to, from){
+      this.getData(this.selectedScraper.getSelectedScraper);
+    }
+},
   created() {
-    this.getData();
+    const selectedScraper= useSelectedScraperStore()
+    selectedScraper.$onAction(({name:selectedScraper, args})=>{
+      const scraperId = args[0]
+      this.getData(scraperId)
+    }, true)
+
+    this.getData(this.selectedScraper.getSelectedScraper);
   },
 });
 </script>

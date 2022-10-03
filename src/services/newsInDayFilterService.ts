@@ -28,20 +28,20 @@ export const filterLastIterationOnly = (news: NewScrapedI[]): NewScrapedI[] => {
 
 export const findCurrentNewsUsingIndex = (
   news: NewScrapedI[],
-  index: ScrapingIndexI
+  index: ScrapingIndexI,
 ): NewScrapedI[] => {
   const urls = index.currentScrapingUrlList;
-  console.log("-------------")
-  console.log(index)
+  console.log(urls)
   const resultArrayInUrl = [] as NewScrapedI[];
 
   for (const url of urls) {
-    const item = news.find((n) => n.url === url);
+    const item = news.find((n) => n.url === url && n.scraperId === index.scraperId);
     if (item) {
       resultArrayInUrl.push(item);
     }
   }
-
+  
+  
   const copy = [...resultArrayInUrl]
   const setHeadlines = new Set(copy.map(item=>item.headline));
   const headlines = Array.from(setHeadlines.values());

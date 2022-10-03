@@ -19,15 +19,27 @@ export const getAllIndexes = async (): Promise<ScrapingIndexI[]> => {
 
 export const getAllScrapers = async (): Promise<string[]> => {
   const indexes = await getAllIndexes()
+
+  indexes.sort((a, b) => {
+    return (new Date(a.dateScraping) as any) - (new Date(b.dateScraping) as any);
+  });
+
   const scraperIds = indexes.map(item => item.scraperId)
   const setScraper = new Set(scraperIds)
  return Array.from(setScraper.values());
 
 };
 
-export const getIndex = async (newspaper: string): Promise<ScrapingIndexI> => {
-  const url =
+export const getIndex = async (newspaper: string, scraperId: string | null | undefined): Promise<ScrapingIndexI> => {
+  let url: string
+  if (scraperId){
+    url =
+    baseUrl + "scrapingIndex/findQuery?&limit=1&newspaper=" + newspaper + "&scraperId=" + scraperId;
+  }else {
+    url =
     baseUrl + "scrapingIndex/findQuery?&limit=1&newspaper=" + newspaper;
+  }
+  
   const resp = await axios.get(url);
   return get(resp, "data.payload.rows[0]") as ScrapingIndexI;
 };
@@ -49,11 +61,25 @@ const formatDate = (date: Date): string => {
 export const findNewsInDay = async (
   newspaper: string,
   day: Date,
-  daysInterval: number
+  daysInterval: number,
+  scraperId: string | null | undefined
 ): Promise<NewScrapedI[]> => {
   const date = formatDate(day);
+  let url: string;
 
-  const url =
+  if (scraperId){
+    url =
+    baseUrl +
+    "newScraped/findNewsInDay?newspaper=" +
+    newspaper +
+    "&day=" +
+    date +
+    "&daysInterval=" +
+    daysInterval +
+    "&orderCriteria=priority" + 
+    "&scraperId=" + scraperId;
+  } else {
+    url =
     baseUrl +
     "newScraped/findNewsInDay?newspaper=" +
     newspaper +
@@ -62,6 +88,8 @@ export const findNewsInDay = async (
     "&daysInterval=" +
     daysInterval +
     "&orderCriteria=priority";
+  }
+  
   const resp = await axios.get(url);
 
   return get(resp, "data.payload.rows") as NewScrapedI[];
