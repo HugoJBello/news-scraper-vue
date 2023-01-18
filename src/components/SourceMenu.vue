@@ -57,7 +57,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { findNewsInDay, getIndex, getAllScrapers } from "../services/apiService";
+import { ApiService } from "../services/apiService";
 import type { NewScrapedI } from "@/models/NewScraped";
 
 import { findCurrentNewsUsingIndex } from "../services/newsInDayFilterService";
@@ -65,6 +65,7 @@ import { useSelectedScraperStore } from "@/stores/selectedScraper";
 
 import NavbarSource from "./NavbarSource.vue";
 import type { ScrapingIndexI } from "@/models/ScrapingIndex";
+import { useCustomUrlStore } from "@/stores/customUrl";
 
 export default defineComponent({
   components: {
@@ -73,7 +74,10 @@ export default defineComponent({
 
   setup(){
     const selectedScraper= useSelectedScraperStore()
-    return {selectedScraper}
+    const customUrlStore= useCustomUrlStore()
+
+    const apiService = new ApiService()
+    return {selectedScraper, apiService, customUrlStore}
   },
   data() {
     return {
@@ -87,7 +91,7 @@ export default defineComponent({
       try {
 
         if (!scraperId){
-            let scrapers = await getAllScrapers();
+            let scrapers = await this.apiService.getAllScrapers();
             scraperId = scrapers[0]
 
         }
@@ -99,9 +103,9 @@ export default defineComponent({
         const tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
 
-        let news = await findNewsInDay(newspaper as string, tomorrow, 3, undefined);
+        let news = await this.apiService.findNewsInDay(newspaper as string, tomorrow, 3, undefined);
         news = news.filter (n => n.scraperId === scraperId)
-        this.index = await getIndex(newspaper, scraperId);
+        this.index = await this.apiService.getIndex(newspaper, scraperId);
         this.news = findCurrentNewsUsingIndex(news, this.index);
 
         console.log(scraperId)
@@ -120,10 +124,23 @@ export default defineComponent({
     }
 },
   created() {
+
+
     const selectedScraper= useSelectedScraperStore()
+
     selectedScraper.$onAction(({name:selectedScraper, args})=>{
       const scraperId = args[0]
       this.getData(scraperId)
+    }, true)
+
+    const customUrlStore= useCustomUrlStore()
+    customUrlStore.$onAction(({name:customUrl, args})=>{
+      const url = args[0]      
+      this.apiService.baseUrl = url
+      console.log(url)
+      
+      this.getData(this.selectedScraper.getSelectedScraper as string | undefined);
+
     }, true)
 
     this.getData(this.selectedScraper.getSelectedScraper as string | undefined);

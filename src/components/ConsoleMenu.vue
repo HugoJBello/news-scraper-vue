@@ -60,10 +60,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { getAllIndexes, getAllScrapers } from "../services/apiService";
+import { ApiService } from "../services/apiService";
 import type { ScrapingIndexI } from "@/models/ScrapingIndex";
 import { sourceInfoDecider } from "../services/sourceInfoService";
 import { useSelectedScraperStore } from "@/stores/selectedScraper";
+import { useCustomUrlStore } from "@/stores/customUrl";
 
 export default defineComponent({
   data() {
@@ -73,19 +74,22 @@ export default defineComponent({
   },
   setup(){
     const selectedScraper= useSelectedScraperStore()
-    return {selectedScraper}
+    const customUrlStore= useCustomUrlStore()
+
+    const apiService = new ApiService()
+    return {selectedScraper, apiService, customUrlStore}
   },
   methods: {
     async getData(scraperId:string | null) {
       try {
         if (scraperId){
-          let indexes = await getAllIndexes();
+          let indexes = await this.apiService.getAllIndexes();
           indexes = indexes.filter(ind => ind.scraperId === scraperId)
           this.indexes = indexes;
 
         } else {
-          let indexes = await getAllIndexes();
-          let scrapers = await getAllScrapers();
+          let indexes = await this.apiService.getAllIndexes();
+          let scrapers = await this.apiService.getAllScrapers();
           indexes = indexes.filter(ind => ind.scraperId === scrapers[0])
           this.indexes = indexes;
         }
@@ -104,9 +108,21 @@ export default defineComponent({
   created() {
     console.log("created")
     const selectedScraper= useSelectedScraperStore()
+    
     selectedScraper.$onAction(({name:selectedScraper, args})=>{
       const scraperId = args[0]
       this.getData(scraperId)
+    }, true)
+
+
+    const customUrlStore= useCustomUrlStore()
+    customUrlStore.$onAction(({name:customUrl, args})=>{
+      const url = args[0]      
+      this.apiService.baseUrl = url
+      console.log(url)
+      
+      this.getData(this.selectedScraper.getSelectedScraper as string);
+
     }, true)
     
     this.getData(selectedScraper.getSelectedScraper);
