@@ -69,15 +69,14 @@ import { useCustomUrlStore } from "@/stores/customUrl";
 export default defineComponent({
   data() {
     return {
+      apiService:  new ApiService(),
       indexes: [] as ScrapingIndexI[],
     };
   },
   setup(){
     const selectedScraper= useSelectedScraperStore()
     const customUrlStore= useCustomUrlStore()
-
-    const apiService = new ApiService()
-    return {selectedScraper, apiService, customUrlStore}
+    return {selectedScraper, customUrlStore}
   },
   methods: {
     async getData(scraperId:string | null) {
@@ -119,12 +118,12 @@ export default defineComponent({
     customUrlStore.$onAction(({name:customUrl, args})=>{
       const url = args[0]      
       this.apiService.baseUrl = url
-      console.log(url)
-      
+       
       this.getData(this.selectedScraper.getSelectedScraper as string);
 
     }, true)
     
+    this.apiService.baseUrl = customUrlStore.getCustomUrl as string
     this.getData(selectedScraper.getSelectedScraper);
   },
 });

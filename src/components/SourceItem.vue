@@ -51,15 +51,14 @@ export default defineComponent({
   },
   setup(){
     const selectedScraper= useSelectedScraperStore()
-
-    const apiService = new ApiService()
     const customUrlStore= useCustomUrlStore()
 
-    return {apiService, selectedScraper, customUrlStore}
+    return {selectedScraper, customUrlStore}
   },
   data() {
     return {
       id: this.$route.params.id,
+      apiService:  new ApiService(),
       newsItem: {} as NewScrapedI,
       contentLines: [] as string[],
     };
@@ -82,9 +81,12 @@ export default defineComponent({
     customUrlStore.$onAction(({name:customUrl, args})=>{
       const url = args[0]      
       this.apiService.baseUrl = url
-      console.log(url)
+
       this.getData();
     }, true)
+
+    this.apiService.baseUrl = customUrlStore.getCustomUrl as string
+
   },
   mounted() {
     this.getData();

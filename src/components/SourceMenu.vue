@@ -76,11 +76,11 @@ export default defineComponent({
     const selectedScraper= useSelectedScraperStore()
     const customUrlStore= useCustomUrlStore()
 
-    const apiService = new ApiService()
-    return {selectedScraper, apiService, customUrlStore}
+    return {selectedScraper, customUrlStore}
   },
   data() {
     return {
+      apiService:  new ApiService(),
       news: [] as NewScrapedI[],
       index: {} as ScrapingIndexI,
     };
@@ -136,12 +136,12 @@ export default defineComponent({
     const customUrlStore= useCustomUrlStore()
     customUrlStore.$onAction(({name:customUrl, args})=>{
       const url = args[0]      
-      this.apiService.baseUrl = url
-      console.log(url)
-      
+      this.apiService.baseUrl = url      
       this.getData(this.selectedScraper.getSelectedScraper as string | undefined);
 
     }, true)
+
+    this.apiService.baseUrl = customUrlStore.getCustomUrl as string
 
     this.getData(this.selectedScraper.getSelectedScraper as string | undefined);
   },
