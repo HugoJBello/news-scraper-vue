@@ -6,7 +6,7 @@ import { get } from "lodash";
 
 //http://localhost:3000/api/v1/scrapingIndex/findQuery?newspaper=eldiario.es&limit=6&orderByParam=createdAt&orderDirection=DESC
 
-const apiUrl = "https://fe1c-157-88-231-100.eu.ngrok.io"
+const apiUrl = localStorage.getItem("customUrl")
 const defaultBaseUrl = apiUrl;
 
 
