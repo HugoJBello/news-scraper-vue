@@ -98,18 +98,24 @@ export default defineComponent({
 
         console.log("getdata ", scraperId)
         const newspaper = (this.$route.params.newspaper as string).replace("_", ".");
-
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-
-        let news = await this.apiService.findNewsInDay(newspaper as string, tomorrow, 3, undefined);
-        news = news.filter (n => n.scraperId === scraperId)
+ 
+  
         this.index = await this.apiService.getIndex(newspaper, scraperId);
-        this.news = findCurrentNewsUsingIndex(news, this.index);
+
+        const newsIds = this.index.currentScrapingIdList
+        console.log(this.index)
+
+        const news:Promise<NewScrapedI>[] = newsIds.map(id => this.apiService.getNewsItem(id))
+         
+
+        if (news){
+        this.news = await Promise.all(news);
+        }
+
+        this.news = this.news.filter(item => !!item )
 
         console.log(scraperId)
-        console.log(this.index, this.news);
+        console.log(this.news);
       } catch (error) {
         console.log(error);
       }
