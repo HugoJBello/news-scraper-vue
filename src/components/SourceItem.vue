@@ -7,7 +7,7 @@
       <div class="imgcontainer">
         <img :src="newsItem.image" class="rounded img-fluid" alt="..." />
       </div>
-
+      <div class="separator"></div>
       <Markdown :source="newsItem.contentMarkdown" />
       <!--
       <p class="content-text" v-for="content in contentLines">{{ content }}</p>
@@ -21,6 +21,9 @@
 .container {
   margin: 0 auto;
   max-width: 100 px;
+}
+.separator{
+  margin-bottom: 25px;
 }
 .imgcontainer {
   padding-top: 10px;
