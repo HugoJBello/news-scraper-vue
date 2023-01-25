@@ -4,11 +4,46 @@
 
     <div class="container">
       <h1 class="h1">{{ newsItem.headline }}</h1>
-      <div class="imgcontainer">
+      
+      <div class="separator"></div>
+
+
+      <div v-if="!newsItem.figuresUrl || newsItem.figuresUrl.length === 0 || newsItem.figuresUrl[0] === null" class="imgcontainer">
         <img :src="newsItem.image" class="rounded img-fluid" alt="..." />
       </div>
+      
+      <div v-if="newsItem.figuresUrl" id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+        <div class="carousel-indicators">
+          <button v-for="(item, index) in newsItem.figuresUrl" type="button" data-bs-target="#carouselExampleCaptions" :data-bs-slide-to="index" class="active" aria-current="true" aria-label="Slide 1"></button>
+        </div>
+        <div v-if="newsItem.figuresUrl[0]" class="carousel-inner imgcontainer">
+          <div class="carousel-item active">
+            <img :src="newsItem.figuresUrl[0]" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block">
+              <p>{{newsItem.figuresText[0]}}</p>
+            </div>
+          </div>
+          <div v-for="(item, index) in newsItem.figuresUrl" class="carousel-item">
+            <img :src="newsItem.figuresUrl[index]" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block">
+              <p>{{newsItem.figuresText[index]}}</p>
+            </div>
+          </div>
+           
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+      
+      
       <div class="separator"></div>
-      <Markdown :source="newsItem.contentMarkdown" />
+      <Markdown class="child" :source="newsItem.contentMarkdown" />
       <!--
       <p class="content-text" v-for="content in contentLines">{{ content }}</p>
        --> 
@@ -16,7 +51,24 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped lang="css">
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif');
+
+:deep(h2) {
+  font-family: 'Noto Serif';
+  }
+
+:deep(h1) {
+  font-family: 'Noto Serif';
+  }
+
+:deep(p) {
+  font-family: 'Noto Serif';
+}
+
+:deep(a:link) { text-decoration: none; }
+
+
 
 .container {
   margin: 0 auto;

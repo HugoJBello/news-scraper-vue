@@ -6,6 +6,7 @@ import Markdown from 'vue3-markdown-it';
 import App from "./App.vue";
 import router from "./router";
 
+import 'highlight.js/styles/monokai.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 
