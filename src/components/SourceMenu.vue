@@ -18,9 +18,14 @@
                 <h5 class="card-title">{{ item.headline }}</h5>
                 <p class="card-text">{{ item.description }}</p>
                 <p class="text-muted">
-                  <small class="date">{{ item.date }}</small>
-                  <small class="other">{{ item.newsIndex }}</small>
-                  <small class="other">{{ item.scraperId }}</small>
+                  <small class="date">{{ getDateFromNow(item.date) }}</small>
+                  <small class="other">{{ item.newsIndex }} </small>
+                  
+                </p>
+                <p class="text-muted">
+                  <small class="other">
+                    <span v-for="tag in item.tags" class="badge bg-secondary tag">{{tag}}</span>
+                  </small>
                 </p>
               </div>
             </div>
@@ -40,6 +45,9 @@
 }
 .centered {
   margin: 0 auto;
+}
+.tag{
+  margin-right: 3px;
 }
 .title {
   text-align: center;
@@ -66,6 +74,8 @@ import { useSelectedScraperStore } from "@/stores/selectedScraper";
 import NavbarSource from "./NavbarSource.vue";
 import type { ScrapingIndexI } from "@/models/ScrapingIndex";
 import { useCustomUrlStore } from "@/stores/customUrl";
+import moment from "moment";
+import { RouterLink } from "vue-router";
 
 export default defineComponent({
   components: {
@@ -119,6 +129,9 @@ export default defineComponent({
       } catch (error) {
         console.log(error);
       }
+    },
+    getDateFromNow(date: Date){
+      return moment(date).fromNow() 
     },
     getlink(news: NewScrapedI) {
       return "/sourceItem/" + news.id;

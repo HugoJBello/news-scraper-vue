@@ -1,14 +1,14 @@
 //https://walrus-app-kitxm.ondigitalocean.app/news-scraper-api2/api/v1/newScraped/findQuery?newspaper=eldiario.es&limit=8888&orderByParam=createdAt&orderDirection=ASC
+import type { GlobalConfigSqlSqlI } from "@/models/GlobalConfigSql";
 import type { NewScrapedI } from "@/models/NewScraped";
 import type { ScrapingIndexI } from "@/models/ScrapingIndex";
 import axios from "axios";
 import { get } from "lodash";
-
+import { LocalStorageService } from "./localStorageService";
 //http://localhost:3000/api/v1/scrapingIndex/findQuery?newspaper=eldiario.es&limit=6&orderByParam=createdAt&orderDirection=DESC
 
-const apiUrl = localStorage.getItem("customUrl")
+const apiUrl = LocalStorageService.getCustomUrl()
 const defaultBaseUrl = apiUrl;
-
 
 
 axios.defaults.headers.common["ngrok-skip-browser-warning"] = "69420";
@@ -73,6 +73,34 @@ export class ApiService {
     date = new Date(date.getTime() - offset * 60 * 1000);
     return date.toISOString().split("T")[0];
   };
+
+  ////http://localhost:3000/api/v1/globalConfig/findQuery?limit=6&orderByParam=createdAt&orderDirection=DESC
+  public findGlobalConfig = async (
+    scraperId: string | null | undefined
+  ): Promise<GlobalConfigSqlSqlI> => {
+    
+    let url: string;
+
+    if (scraperId) {
+      url =
+        this.baseUrl +
+        "/api/v1/globalConfig/findQuery?limit=9999&orderByParam=createdAt&orderDirection=DESC&scraperId=" +
+        scraperId;
+    } else {
+      url =
+        this.baseUrl +
+        "/api/v1/globalConfig/findQuery?limit=9999&orderByParam=createdAt&orderDirection=DESC"
+    }
+
+
+    const resp = await axios.get(url);
+
+    const globalConfigSqlSqlI =  get(resp, "data.payload.rows")[0] as GlobalConfigSqlSqlI;
+    if (globalConfigSqlSqlI){
+      globalConfigSqlSqlI.lastActive = new Date(globalConfigSqlSqlI.lastActive)
+    }
+    return globalConfigSqlSqlI
+  }
 
   public findNewsInDay = async (
     newspaper: string,

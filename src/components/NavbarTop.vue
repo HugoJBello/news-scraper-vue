@@ -12,11 +12,11 @@
           <li class="nav-item">
             <RouterLink class="nav-link" to="/">Sources</RouterLink>
           </li>
-          <li class="nav-item" v-if="sourcesInfo" v-for="item in sourcesInfo">
-            <RouterLink class="nav-link" :to="getlink(item)">{{
-              item.newspaper
-            }}</RouterLink>
+
+          <li class="nav-item">
+            <RouterLink class="nav-link" to="/server">Server</RouterLink>
           </li>
+          
         </ul>
         <form class="d-flex">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="customUrl">
@@ -62,9 +62,8 @@ export default defineComponent({
   },
   setup(){
     const customUrlStore= useCustomUrlStore()
-    const localStorageService = new LocalStorageService()
     const apiService = new ApiService()
-    return {customUrlStore, apiService, localStorageService}
+    return {customUrlStore, apiService}
   },
   data() {
     return {
@@ -89,7 +88,7 @@ export default defineComponent({
     },
     changeCustomUrl() {
       this.selectCustomUrl(this.customUrl as string)
-      this.localStorageService.setCustomUrl(this.customUrl as string)
+      LocalStorageService.setCustomUrl(this.customUrl as string)
       
     },
     changeSelected() {
@@ -99,7 +98,7 @@ export default defineComponent({
       return "/source/" + source.newspaper.replace(".", "_");
     },
     getCustomUrlFromStorage() {
-      const customUrl = this.localStorageService.getCustomUrl()
+      const customUrl = LocalStorageService.getCustomUrl()
       if (customUrl){
         console.log(customUrl)
         this.selectCustomUrl(customUrl as string)

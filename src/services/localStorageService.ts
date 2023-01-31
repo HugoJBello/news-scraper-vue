@@ -1,15 +1,23 @@
-export class LocalStorageService {
+export  class LocalStorageService {
 
     constructor() {
        
     }
 
-    setCustomUrl = (customUrl:string) => {
+    static setCustomUrl = (customUrl:string) => {
         localStorage.setItem("customUrl", customUrl)
     }
 
-    getCustomUrl = () => {
+    static getCustomUrl = () => {
         return localStorage.getItem("customUrl")
+    }
+
+    static setSelectedScraper = (selectedScraper:string) => {
+        localStorage.setItem("selectedScraper", selectedScraper)
+    }
+
+    static getSelectedScraper = () => {
+        return localStorage.getItem("selectedScraper")
     }
 
 

@@ -18,7 +18,7 @@
           <div class="card-body">
             <h5 class="card-title">{{ item.newspaper }}</h5>
             <p class="card-text">
-              <small class="text-muted">{{ item.dateScraping }}</small> <small class="text-muted">{{ item.scraperId }}</small>
+              <small class="text-muted">{{ getDateFromNow(item.dateScraping) }}</small> <small class="text-muted">{{ item.scraperId }}</small>
             </p>
           </div>
         </div>
@@ -65,6 +65,7 @@ import type { ScrapingIndexI } from "@/models/ScrapingIndex";
 import { sourceInfoDecider } from "../services/sourceInfoService";
 import { useSelectedScraperStore } from "@/stores/selectedScraper";
 import { useCustomUrlStore } from "@/stores/customUrl";
+import moment from "moment";
 
 export default defineComponent({
   data() {
@@ -102,6 +103,9 @@ export default defineComponent({
     getImage(newspaper: string) {
       const sourceInfo = sourceInfoDecider(newspaper);
       return sourceInfo.logoUrl;
+    },
+    getDateFromNow(date: Date){
+      return moment(date).fromNow() 
     },
   }, 
   created() {
