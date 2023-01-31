@@ -67,6 +67,11 @@ export default defineComponent({
 
   created() {
     this.getData();
-  }
+  },
+  updated() {
+    if (!this.newspaper || !this.index.logoUrl) {
+    this.getData();
+    }
+  },
 });
 </script>
