@@ -67,9 +67,6 @@ export default defineComponent({
 
   created() {
     this.getData();
-  },
-  updated() {
-    this.getData();
-  },
+  }
 });
 </script>
