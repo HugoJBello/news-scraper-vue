@@ -24,7 +24,7 @@
                 </p>
                 <p class="text-muted">
                   <small class="other">
-                    <span v-for="tag in item.tags" class="badge bg-secondary tag">{{tag}}</span>
+                    <span v-for="tag in item.sections" class="badge bg-secondary tag">{{tag}}</span>
                   </small>
                 </p>
               </div>
