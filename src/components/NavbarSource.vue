@@ -60,7 +60,7 @@ export default defineComponent({
     async getData() {
       if (this.newspaper) {
         const scraperId = this.selectedScraper.getSelectedScraper
-        this.index = await this.apiService.getIndex(this.newspaper, scraperId);
+        this.index = await this.apiService.getIndex(this.newspaper.replace("_", "."), scraperId);
       }
     }
   },
