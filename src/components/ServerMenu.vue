@@ -16,6 +16,7 @@
           <li class="list-group-item"><b>Last item scraped:</b> {{ lastGlobalConfig?.lastNewspaper }}</li>
           <li class="list-group-item"><b>Scraper Id:</b> {{ lastGlobalConfig?.scraperId }}</li>
           <li class="list-group-item"><b>last activity:</b> {{ getLastActivity()}}</li>
+          <li class="list-group-item"><b>active since</b> {{ getActiveSince()}}</li>
 
         </ul>
     </div>
@@ -94,7 +95,7 @@ import moment from "moment"
 import { useCustomUrlStore } from "@/stores/customUrl";
 import { useSelectedScraperStore } from "@/stores/selectedScraper";
 import { ServerActivityService } from "@/services/serverActivityService";
-import type { GlobalConfigSqlSqlI } from "@/models/GlobalConfigSql";
+import type { GlobalConfigI } from "@/models/GlobalConfigSql";
 import { mapActions } from "pinia";
 import { LocalStorageService } from "@/services/localStorageService";
 
@@ -117,7 +118,7 @@ export default defineComponent({
       isActive: false,
       selectedScraper: "" as string,
       allScrapers: [] as string[],
-      lastGlobalConfig: {} as GlobalConfigSqlSqlI | undefined,
+      lastGlobalConfig: {} as GlobalConfigI | undefined,
     };
   },
   methods: {
@@ -132,6 +133,13 @@ export default defineComponent({
     getLastActivity(){
       if (this.lastGlobalConfig){
         return this.getDateFromNow(this.lastGlobalConfig.lastActive as Date)
+      } else {
+        return 'no activity'
+      }
+    },
+    getActiveSince(){
+      if (this.lastGlobalConfig){
+        return this.getDateFromNow(this.lastGlobalConfig.activeSince as Date)
       } else {
         return 'no activity'
       }

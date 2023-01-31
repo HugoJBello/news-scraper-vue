@@ -1,3 +1,7 @@
+
+
+
+
 export interface ScrapingIndexI {
   dateScraping: Date;
   urlIndex: number;
@@ -11,8 +15,10 @@ export interface ScrapingIndexI {
   currentScrapingUrlList: string[];
   scraperId: string;
   deviceId: string;
+  logoUrl: string;
   id:number;
   scrapingIteration:number;
 }
 
-export const joiningStr = '=====';
+export const joiningStr = "====="
+

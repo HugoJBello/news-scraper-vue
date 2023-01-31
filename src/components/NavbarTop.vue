@@ -49,9 +49,7 @@
 <script lang="ts">
 
 import { defineComponent } from "vue";
-import type { SourceInfo } from "../services/sourceInfoService";
 import { mapActions } from "pinia";
-import { getAllSources } from "../services/sourceInfoService";
 import { useSelectedScraperStore } from "@/stores/selectedScraper";
 import { ApiService } from "@/services/apiService";
 import { useCustomUrlStore } from "@/stores/customUrl";
@@ -68,15 +66,11 @@ export default defineComponent({
   data() {
     return {
       customUrl: undefined as undefined | string,
-      sourcesInfo: undefined as SourceInfo[] | undefined,
       allScrapers: [] as string[],
       selectedScraper: "" as string,
     };
   },
   methods: {
-    async getSources() {
-      this.sourcesInfo = getAllSources();
-    },
     async getScrapers() {
       if (this.allScrapers.length === 0) {
         this.allScrapers = await this.apiService.getAllScrapers();
@@ -94,9 +88,7 @@ export default defineComponent({
     changeSelected() {
       this.selectScraper(this.selectedScraper)
     },
-    getlink(source: SourceInfo) {
-      return "/source/" + source.newspaper.replace(".", "_");
-    },
+  
     getCustomUrlFromStorage() {
       const customUrl = LocalStorageService.getCustomUrl()
       if (customUrl){
@@ -110,7 +102,6 @@ export default defineComponent({
   },
 
   created() {
-    this.getSources();
     this.getScrapers();
 
     const customUrlStore= useCustomUrlStore()

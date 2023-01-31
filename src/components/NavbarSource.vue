@@ -2,13 +2,13 @@
   <div class="navsource">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
-        <span v-if="sourceInfo" class="navbar-brand">
-          <img :src="sourceInfo.logoUrl" class="img-logo" />
+        <span v-if="index" class="navbar-brand">
+          <img :src="index.logoUrl" class="img-logo" />
         </span>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              {{ sourceInfo.newspaper }}
+              {{ index.newspaper }}
             </li>
           </ul>
         </div>
@@ -35,29 +35,34 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import type { NewScrapedI } from "@/models/NewScraped";
-import type { SourceInfo } from "../services/sourceInfoService";
+import type { ScrapingIndexI } from "@/models/ScrapingIndex";
 
-import { sourceInfoDecider } from "../services/sourceInfoService";
+import { ApiService } from "@/services/apiService";
+import { useSelectedScraperStore } from "@/stores/selectedScraper";
 
 export default defineComponent({
   props: {
     newspaper: String,
   },
+   setup(){
+    const apiService = new ApiService()
+    const selectedScraper= useSelectedScraperStore()
+
+    return {apiService, selectedScraper}
+  },
   data() {
     return {
-      sourceInfo: {} as SourceInfo,
+      index: {} as ScrapingIndexI,
+
     };
   },
   methods: {
     async getData() {
       if (this.newspaper) {
-        this.sourceInfo = sourceInfoDecider(this.newspaper as string);
+        const scraperId = this.selectedScraper.getSelectedScraper
+        this.index = await this.apiService.getIndex(this.newspaper, scraperId);
       }
-    },
-    getlink(news: NewScrapedI) {
-      return "/sourceItem/" + news.id;
-    },
+    }
   },
 
   created() {

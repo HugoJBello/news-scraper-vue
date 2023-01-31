@@ -10,7 +10,7 @@
       <div class="row g-0">
         <div class="col-md-4">
           <img
-            :src="getImage(item.newspaper)"
+            :src="item.logoUrl"
             class="img-fluid img-thumbnail img-max"
           />
         </div>
@@ -62,7 +62,6 @@
 import { defineComponent } from "vue";
 import { ApiService } from "../services/apiService";
 import type { ScrapingIndexI } from "@/models/ScrapingIndex";
-import { sourceInfoDecider } from "../services/sourceInfoService";
 import { useSelectedScraperStore } from "@/stores/selectedScraper";
 import { useCustomUrlStore } from "@/stores/customUrl";
 import moment from "moment";
@@ -99,10 +98,6 @@ export default defineComponent({
     },
     getlink(news: ScrapingIndexI) {
       return "/source/" + news.newspaper.replace(".", "_");
-    },
-    getImage(newspaper: string) {
-      const sourceInfo = sourceInfoDecider(newspaper);
-      return sourceInfo.logoUrl;
     },
     getDateFromNow(date: Date){
       return moment(date).fromNow() 

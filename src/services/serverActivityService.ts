@@ -1,5 +1,5 @@
 //https://walrus-app-kitxm.ondigitalocean.app/news-scraper-api2/api/v1/newScraped/findQuery?newspaper=eldiario.es&limit=8888&orderByParam=createdAt&orderDirection=ASC
-import type { GlobalConfigSqlSqlI } from "@/models/GlobalConfigSql";
+import type { GlobalConfigI } from "@/models/GlobalConfigSql";
 import type { NewScrapedI } from "@/models/NewScraped";
 import type { ScrapingIndexI } from "@/models/ScrapingIndex";
 import axios from "axios";
@@ -24,7 +24,7 @@ export class ServerActivityService {
     }
   }
 
-  public getLastActiveService = async (scraperId: string | undefined | null): Promise<GlobalConfigSqlSqlI | undefined> => {
+  public getLastActiveService = async (scraperId: string | undefined | null): Promise<GlobalConfigI | undefined> => {
     if (!scraperId){
       scraperId = this.lastScraperId
     }
@@ -35,7 +35,7 @@ export class ServerActivityService {
     }
   }
 
-  public isActive(globalConfig: GlobalConfigSqlSqlI): boolean {
+  public isActive(globalConfig: GlobalConfigI): boolean {
     if (!globalConfig) return false
 
     return (Date.now() - globalConfig.lastActive.getTime()) <= this.thredshold

@@ -1,5 +1,5 @@
 //https://walrus-app-kitxm.ondigitalocean.app/news-scraper-api2/api/v1/newScraped/findQuery?newspaper=eldiario.es&limit=8888&orderByParam=createdAt&orderDirection=ASC
-import type { GlobalConfigSqlSqlI } from "@/models/GlobalConfigSql";
+import type { GlobalConfigI } from "@/models/GlobalConfigSql";
 import type { NewScrapedI } from "@/models/NewScraped";
 import type { ScrapingIndexI } from "@/models/ScrapingIndex";
 import axios from "axios";
@@ -77,7 +77,7 @@ export class ApiService {
   ////http://localhost:3000/api/v1/globalConfig/findQuery?limit=6&orderByParam=createdAt&orderDirection=DESC
   public findGlobalConfig = async (
     scraperId: string | null | undefined
-  ): Promise<GlobalConfigSqlSqlI> => {
+  ): Promise<GlobalConfigI> => {
     
     let url: string;
 
@@ -95,7 +95,7 @@ export class ApiService {
 
     const resp = await axios.get(url);
 
-    const globalConfigSqlSqlI =  get(resp, "data.payload.rows")[0] as GlobalConfigSqlSqlI;
+    const globalConfigSqlSqlI =  get(resp, "data.payload.rows")[0] as GlobalConfigI;
     if (globalConfigSqlSqlI){
       globalConfigSqlSqlI.lastActive = new Date(globalConfigSqlSqlI.lastActive)
     }
