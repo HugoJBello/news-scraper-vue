@@ -54,14 +54,16 @@ import { useSelectedScraperStore } from "@/stores/selectedScraper";
 import { ApiService } from "@/services/apiService";
 import { useCustomUrlStore } from "@/stores/customUrl";
 import { LocalStorageService } from "@/services/localStorageService";
+import { useAlertStore } from "@/stores/alert";
 export default defineComponent({
   props: {
     newspaper: String,
   },
   setup(){
     const customUrlStore= useCustomUrlStore()
+    const alertStore = useAlertStore()
     const apiService = new ApiService()
-    return {customUrlStore, apiService}
+    return {customUrlStore, apiService, alertStore}
   },
   data() {
     return {
@@ -80,11 +82,34 @@ export default defineComponent({
         }
       }
     },
-    changeCustomUrl() {
-      this.selectCustomUrl(this.customUrl as string)
+    async changeCustomUrl() {
+      await this.selectCustomUrl(this.customUrl as string)
+      const active = await this.isActiveUrl(this.customUrl as string)
+        
+      if (active == true){
+        this.setAlert("The url\n "+ this.customUrl + "\n is active", "warning")
+        this.$router.push({ name: 'console' })
+      } else {
+        this.setAlert("The url\n "+ this.customUrl + "\n is inactive", "error")
+
+      }
+      
       LocalStorageService.setCustomUrl(this.customUrl as string)
       
     },
+    async isActiveUrl(url:string){
+      try{
+        this.apiService.baseUrl = url
+        const config = await this.apiService.findGlobalConfig(null)
+        if (config.scraperId){
+          return true
+        }
+      } catch (err){
+        return false
+      }
+      
+    },
+
     changeSelected() {
       this.selectScraper(this.selectedScraper)
     },
@@ -97,7 +122,8 @@ export default defineComponent({
       }
     },
     ...mapActions(useSelectedScraperStore, ['selectScraper']),
-    ...mapActions(useCustomUrlStore, ['selectCustomUrl'])
+    ...mapActions(useCustomUrlStore, ['selectCustomUrl']),
+    ...mapActions(useAlertStore, ['setAlert'])
 
   },
 

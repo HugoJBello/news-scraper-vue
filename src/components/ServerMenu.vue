@@ -119,6 +119,7 @@ export default defineComponent({
       selectedScraper: "" as string,
       allScrapers: [] as string[],
       lastGlobalConfig: {} as GlobalConfigI | undefined,
+      timer: null as any | undefined,
     };
   },
   methods: {
@@ -185,6 +186,10 @@ export default defineComponent({
   },
   created() {
     this.getScrapers();
+
+    this.timer = setInterval(() =>{
+      this.getData();
+    }, 10000); 
 
     const customUrlStore= useCustomUrlStore()
 
