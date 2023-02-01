@@ -1,12 +1,20 @@
 <template>
+  <div class="container">
     <div v-if="text" class="alert alert-warning alert-dismissible fade show" role="alert">
        {{text}}
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-
+  </div>
 </template>
 
 <style scoped>
+.container {
+  position:fixed; 
+  top: 60px; 
+  left: 0px; 
+  z-index: 99999;
+
+}
 </style>
 
 <script lang="ts">

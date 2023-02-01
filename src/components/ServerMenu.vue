@@ -30,15 +30,16 @@
           <h5 class="card-title">Active server url</h5>
           
           <div class="card-text">
-            <form class="d-flex sep">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="customUrl">
-            <div class="btn btn-outline-success button_add"  @click="changeCustomUrl">add</div>
-          </form>
+            <div class="d-flex sep">
+              <input class="form-control me-2" type="search" placeholder="Add server"  v-on:keyup.enter="changeCustomUrl" aria-label="Add server" v-model="customUrl">
+              <div class="btn btn-outline-success button_add"  @click="changeCustomUrl">add</div>
+          </div>
           </div>
         </div>
+
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
-              <form class="d-flex">
+              <div class="d-flex">
               <b>scraper:</b>
               <select
                 class="form-select form-select-sm"
@@ -49,7 +50,7 @@
               v-for="item in allScrapers" :value="item">{{ item }}</option>
               </select>
 
-            </form>  
+            </div>  
             </li>
           </ul>
     </div>
@@ -98,6 +99,7 @@ import { ServerActivityService } from "@/services/serverActivityService";
 import type { GlobalConfigI } from "@/models/GlobalConfigSql";
 import { mapActions } from "pinia";
 import { LocalStorageService } from "@/services/localStorageService";
+import { useAlertStore } from "@/stores/alert";
 
 export default defineComponent({
   components: {
@@ -108,8 +110,9 @@ export default defineComponent({
     const customUrlStore= useCustomUrlStore()
     const apiService =  new ApiService();
     const serverActivityService =  new ServerActivityService(apiService);
+    const alertStore = useAlertStore()
 
-    return {useSelectedScraper, customUrlStore, apiService, serverActivityService}
+    return {useSelectedScraper, customUrlStore, apiService, serverActivityService,alertStore}
   },
   data() {
     return {
@@ -148,11 +151,34 @@ export default defineComponent({
     getDateFromNow(date: Date){
       return moment(date).fromNow() 
     },
-    changeCustomUrl() {
-      this.selectCustomUrl(this.customUrl as string)
+    async changeCustomUrl() {
+      await this.selectCustomUrl(this.customUrl as string)
+      const active = await this.isActiveUrl(this.customUrl as string)
+        
+      if (active == true){
+        this.setAlert("The url\n "+ this.customUrl + "\n is active", "warning")
+        //this.$router.push({ name: 'console' })
+      } else {
+        this.setAlert("The url\n "+ this.customUrl + "\n is inactive", "error")
+
+      }
+      
       LocalStorageService.setCustomUrl(this.customUrl as string)
-      this.getData()
+      
     },
+    async isActiveUrl(url:string){
+      try{
+        this.apiService.baseUrl = url
+        const config = await this.apiService.findGlobalConfig(null)
+        if (config.scraperId){
+          return true
+        }
+      } catch (err){
+        return false
+      }
+      
+    },
+
     changeSelected() {
       this.selectScraper(this.selectedScraper)
     },
@@ -181,8 +207,7 @@ export default defineComponent({
     },
     ...mapActions(useCustomUrlStore, ['selectCustomUrl']),
     ...mapActions(useSelectedScraperStore, ['selectScraper']),
-
-
+    ...mapActions(useAlertStore, ['setAlert'])
   },
   created() {
     this.getScrapers();

@@ -18,12 +18,12 @@
           </li>
           
         </ul>
-        <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="customUrl">
-          <div class="btn btn-outline-success button_add"  @click="changeCustomUrl">add</div>
-        </form>
+        <div class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Add server"  v-on:keyup.enter="changeCustomUrl" aria-label="Add server" v-model="customUrl">
+          <div class="btn btn-outline-success button_add"  @click="changeCustomUrl">server</div>
+        </div>
 
-        <form class="d-flex">
+        <div class="d-flex">
           <select
             class="form-select form-select-sm"
             v-model="selectedScraper"
@@ -33,7 +33,7 @@
           v-for="item in allScrapers" :value="item">{{ item }}</option>
           </select>
 
-        </form>
+        </div>
       </div>
     </div>
 
