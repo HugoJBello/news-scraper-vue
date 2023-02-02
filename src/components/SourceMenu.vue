@@ -90,7 +90,6 @@ export default defineComponent({
   },
   data() {
     return {
-      apiService:  new ApiService(),
       news: [] as NewScrapedI[],
       index: {} as ScrapingIndexI,
     };
@@ -101,7 +100,7 @@ export default defineComponent({
       try {
 
         if (!scraperId){
-            let scrapers = await this.apiService.getAllScrapers();
+            let scrapers = await this.customUrlStore.getApiService.getAllScrapers();
             scraperId = scrapers[0]
 
         }
@@ -110,12 +109,12 @@ export default defineComponent({
         const newspaper = (this.$route.params.newspaper as string).replace("_", ".");
  
   
-        this.index = await this.apiService.getIndex(newspaper, scraperId);
+        this.index = await this.customUrlStore.getApiService.getIndex(newspaper, scraperId);
 
         const newsIds = this.index.currentScrapingIdList
         console.log(this.index)
 
-        const news:Promise<NewScrapedI>[] = newsIds.map(id => this.apiService.getNewsItem(id))
+        const news:Promise<NewScrapedI>[] = newsIds.map(id => this.customUrlStore.getApiService.getNewsItem(id))
          
 
         if (news){
@@ -154,13 +153,9 @@ export default defineComponent({
 
     const customUrlStore= useCustomUrlStore()
     customUrlStore.$onAction(({name:customUrl, args})=>{
-      const url = args[0]      
-      this.apiService.baseUrl = url      
       this.getData(this.selectedScraper.getSelectedScraper as string | undefined);
 
     }, true)
-
-    this.apiService.baseUrl = customUrlStore.getCustomUrl as string
 
     this.getData(this.selectedScraper.getSelectedScraper as string | undefined);
   },

@@ -113,7 +113,6 @@ export default defineComponent({
   data() {
     return {
       id: this.$route.params.id,
-      apiService:  new ApiService(),
       newsItem: {} as NewScrapedI,
       contentLines: [] as string[],
     };
@@ -121,7 +120,7 @@ export default defineComponent({
   methods: {
     async getData() {
       try {
-        this.newsItem = await this.apiService.getNewsItem(this.id as string);
+        this.newsItem = await this.customUrlStore.getApiService.getNewsItem(this.id as string);
         if (this.newsItem){
           console.log(this.newsItem);
           this.contentLines = this.newsItem.content.split("\n");
@@ -132,16 +131,9 @@ export default defineComponent({
     },
   },
   created() {
-    const customUrlStore= useCustomUrlStore()
-    customUrlStore.$onAction(({name:customUrl, args})=>{
-      const url = args[0]      
-      this.apiService.baseUrl = url
-
-      this.getData();
+    this.customUrlStore.$onAction(({name:customUrl, args})=>{
+     this.getData()
     }, true)
-
-    this.apiService.baseUrl = customUrlStore.getCustomUrl as string
-
   },
   mounted() {
     this.getData();

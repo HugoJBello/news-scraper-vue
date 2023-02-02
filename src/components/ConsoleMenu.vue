@@ -69,7 +69,6 @@ import moment from "moment";
 export default defineComponent({
   data() {
     return {
-      apiService:  new ApiService(),
       indexes: [] as ScrapingIndexI[],
     };
   },
@@ -82,14 +81,14 @@ export default defineComponent({
     async getData(scraperId:string | null) {
       try {
         if (scraperId){
-          let indexes = await this.apiService.getAllIndexes();
-          indexes = indexes.filter(ind => ind.scraperId === scraperId)
+          let indexes = await this.customUrlStore.getApiService.getAllIndexes();
+          indexes = (indexes as ScrapingIndexI[]).filter(ind => ind.scraperId === scraperId)
           this.indexes = indexes;
 
         } else {
-          let indexes = await this.apiService.getAllIndexes();
-          let scrapers = await this.apiService.getAllScrapers();
-          indexes = indexes.filter(ind => ind.scraperId === scrapers[0])
+          let indexes = await this.customUrlStore.getApiService.getAllIndexes();
+          let scrapers = await this.customUrlStore.getApiService.getAllScrapers();
+          indexes = (indexes as ScrapingIndexI[]).filter(ind => ind.scraperId === scrapers[0])
           this.indexes = indexes;
         }
       } catch (error) {
@@ -116,13 +115,13 @@ export default defineComponent({
     const customUrlStore= useCustomUrlStore()
     customUrlStore.$onAction(({name:customUrl, args})=>{
       const url = args[0]      
-      this.apiService.baseUrl = url
+      this.customUrlStore.getApiService.baseUrl = url
        
       this.getData(this.selectedScraper.getSelectedScraper as string);
 
     }, true)
     
-    this.apiService.baseUrl = customUrlStore.getCustomUrl as string
+    this.customUrlStore.getApiService.baseUrl = customUrlStore.getCustomUrl as string
     this.getData(selectedScraper.getSelectedScraper);
   },
 });

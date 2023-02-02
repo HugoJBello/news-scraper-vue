@@ -62,8 +62,7 @@ export default defineComponent({
   setup(){
     const customUrlStore= useCustomUrlStore()
     const alertStore = useAlertStore()
-    const apiService = new ApiService()
-    return {customUrlStore, apiService, alertStore}
+    return {customUrlStore, alertStore}
   },
   data() {
     return {
@@ -73,15 +72,7 @@ export default defineComponent({
     };
   },
   methods: {
-    async getScrapers() {
-      if (this.allScrapers.length === 0) {
-        this.allScrapers = await this.apiService.getAllScrapers();
-        if (this.allScrapers) {
-          console.log();
-          this.selectedScraper = this.allScrapers[0];
-        }
-      }
-    },
+    
     async changeCustomUrl() {
       await this.selectCustomUrl(this.customUrl as string)
       const active = await this.isActiveUrl(this.customUrl as string)
@@ -99,8 +90,8 @@ export default defineComponent({
     },
     async isActiveUrl(url:string){
       try{
-        this.apiService.baseUrl = url
-        const config = await this.apiService.findGlobalConfig(null)
+        const apiService = new ApiService(url)
+        const config = await apiService.findGlobalConfig(null)
         if (config.scraperId){
           return true
         }
@@ -128,7 +119,6 @@ export default defineComponent({
   },
 
   created() {
-    this.getScrapers();
 
     const customUrlStore= useCustomUrlStore()
     customUrlStore.$onAction(({name:customUrl, args})=>{

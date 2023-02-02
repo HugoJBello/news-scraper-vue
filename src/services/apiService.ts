@@ -10,8 +10,11 @@ import { LocalStorageService } from "./localStorageService";
 const apiUrl = LocalStorageService.getCustomUrl()
 const defaultBaseUrl = apiUrl;
 
-
-axios.defaults.headers.common["ngrok-skip-browser-warning"] = "69420";
+const config = {
+  headers:{
+    "ngrok-skip-browser-warning": "69420"
+  }
+};
 
 
 export class ApiService {
@@ -27,7 +30,7 @@ export class ApiService {
     const url =
       this.baseUrl +
       "/api/v1/scrapingIndex/findQuery?&limit=99999&orderByParam=createdAt&orderDirection=ASC";
-    const resp = await axios.get(url);
+    const resp = await axios.get(url, config);
     return get(resp, "data.payload.rows") as ScrapingIndexI[];
   };
 
@@ -54,7 +57,7 @@ export class ApiService {
       this.baseUrl + "/api/v1/scrapingIndex/findQuery?&limit=1&newspaper=" + newspaper;
     }
 
-    const resp = await axios.get(url);
+    const resp = await axios.get(url, config);
     return get(resp, "data.payload.rows[0]") as ScrapingIndexI;
   };
 
@@ -62,7 +65,7 @@ export class ApiService {
 
   getNewsItem = async (id: string): Promise<NewScrapedI> => {
     const url = this.baseUrl + "/api/v1/newScraped/findQuery?&limit=1&id=" + id;
-    const resp = await axios.get(url);
+    const resp = await axios.get(url, config);
     return get(resp, "data.payload.rows")[0];
   };
 
@@ -93,7 +96,7 @@ export class ApiService {
     }
 
 
-    const resp = await axios.get(url);
+    const resp = await axios.get(url, config);
 
     const globalConfigSqlSqlI =  get(resp, "data.payload.rows")[0] as GlobalConfigI;
     if (globalConfigSqlSqlI){
@@ -134,7 +137,7 @@ export class ApiService {
         "&orderCriteria=priority";
     }
 
-    const resp = await axios.get(url);
+    const resp = await axios.get(url, config);
 
     return get(resp, "data.payload.rows") as NewScrapedI[];
   };

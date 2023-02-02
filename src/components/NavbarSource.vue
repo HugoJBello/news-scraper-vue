@@ -39,16 +39,18 @@ import type { ScrapingIndexI } from "@/models/ScrapingIndex";
 
 import { ApiService } from "@/services/apiService";
 import { useSelectedScraperStore } from "@/stores/selectedScraper";
+import { useCustomUrlStore } from "@/stores/customUrl";
 
 export default defineComponent({
   props: {
     newspaper: String,
   },
    setup(){
-    const apiService = new ApiService()
+    const customUrlStore= useCustomUrlStore()
+
     const selectedScraper= useSelectedScraperStore()
 
-    return {apiService, selectedScraper}
+    return {customUrlStore, selectedScraper}
   },
   data() {
     return {
@@ -60,7 +62,8 @@ export default defineComponent({
     async getData() {
       if (this.newspaper) {
         const scraperId = this.selectedScraper.getSelectedScraper
-        this.index = await this.apiService.getIndex(this.newspaper.replace("_", "."), scraperId);
+        const apiService = this.customUrlStore.getApiService
+        this.index = await apiService.getIndex(this.newspaper.replace("_", "."), scraperId);
       }
     }
   },
