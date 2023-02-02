@@ -7,8 +7,6 @@ import { get } from "lodash";
 import { LocalStorageService } from "./localStorageService";
 //http://localhost:3000/api/v1/scrapingIndex/findQuery?newspaper=eldiario.es&limit=6&orderByParam=createdAt&orderDirection=DESC
 
-const apiUrl = LocalStorageService.getCustomUrl()
-const defaultBaseUrl = apiUrl;
 
 const config = {
   headers:{
@@ -18,7 +16,7 @@ const config = {
 
 
 export class ApiService {
-  public baseUrl = defaultBaseUrl
+  public baseUrl = null as null | string
   constructor(baseUrl?: string) {
     
     if (baseUrl){

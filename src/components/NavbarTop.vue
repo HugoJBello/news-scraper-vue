@@ -66,7 +66,7 @@ export default defineComponent({
   },
   data() {
     return {
-      customUrl: undefined as undefined | string,
+      customUrl: (this.customUrlStore as any).getCustomUrl as undefined | string,
       allScrapers: [] as string[],
       selectedScraper: "" as string,
     };
@@ -105,13 +105,6 @@ export default defineComponent({
       this.selectScraper(this.selectedScraper)
     },
   
-    getCustomUrlFromStorage() {
-      const customUrl = LocalStorageService.getCustomUrl()
-      if (customUrl){
-        console.log(customUrl)
-        this.selectCustomUrl(customUrl as string)
-      }
-    },
     ...mapActions(useSelectedScraperStore, ['selectScraper']),
     ...mapActions(useCustomUrlStore, ['selectCustomUrl']),
     ...mapActions(useAlertStore, ['setAlert'])
@@ -126,7 +119,6 @@ export default defineComponent({
       this.customUrl = url
     }, true)
 
-    this.getCustomUrlFromStorage();
 
 
   },

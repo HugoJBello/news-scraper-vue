@@ -108,15 +108,14 @@ export default defineComponent({
   setup(){
     const useSelectedScraper= useSelectedScraperStore()
     const customUrlStore= useCustomUrlStore()
-    const apiService =  new ApiService();
-    const serverActivityService =  new ServerActivityService(apiService);
+    const serverActivityService =  new ServerActivityService(customUrlStore.getApiService);
     const alertStore = useAlertStore()
 
-    return {useSelectedScraper, customUrlStore, apiService, serverActivityService,alertStore}
+    return {useSelectedScraper, customUrlStore, serverActivityService,alertStore}
   },
   data() {
     return {
-      customUrl: undefined as undefined | string,
+      customUrl: (this.customUrlStore as any).getCustomUrl as undefined | string,
       publicPath: window.location.origin,
       isActive: false,
       selectedScraper: "" as string,
@@ -128,7 +127,7 @@ export default defineComponent({
   methods: {
     async getScrapers() {
       if (this.allScrapers.length === 0) {
-        this.allScrapers = await this.apiService.getAllScrapers();
+        this.allScrapers = await this.customUrlStore.getApiService.getAllScrapers();
         if (this.allScrapers) {
           this.selectedScraper = this.allScrapers[0] as string;
         }
@@ -168,8 +167,8 @@ export default defineComponent({
     },
     async isActiveUrl(url:string){
       try{
-        this.apiService.baseUrl = url
-        const config = await this.apiService.findGlobalConfig(null)
+        const apiService = new ApiService(url)
+        const config = await apiService.findGlobalConfig(null)
         if (config.scraperId){
           return true
         }
@@ -187,7 +186,6 @@ export default defineComponent({
         const selected = (this.selectedScraper)? this.selectedScraper : this.useSelectedScraper.getSelectedScraper 
          this.lastGlobalConfig = await this.serverActivityService.getLastActiveService(selected as string)
          if (this.lastGlobalConfig){
-          console.log(this.lastGlobalConfig)
           this.isActive = this.serverActivityService.isActive(this.lastGlobalConfig)
          } else {
           this.isActive = false
@@ -198,42 +196,31 @@ export default defineComponent({
         console.log(error);
       }
     },
-    getCustomUrlFromStorage() {
-      const customUrl = LocalStorageService.getCustomUrl()
-      if (customUrl){
-        console.log(customUrl)
-        this.selectCustomUrl(customUrl as string)
-      }
-    },
+    
     ...mapActions(useCustomUrlStore, ['selectCustomUrl']),
     ...mapActions(useSelectedScraperStore, ['selectScraper']),
     ...mapActions(useAlertStore, ['setAlert'])
   },
   created() {
+    this.serverActivityService = new ServerActivityService(this.customUrlStore.getApiService)
+    this.getData()
     this.getScrapers();
 
     this.timer = setInterval(() =>{
       this.getData();
-    }, 10000); 
+    }, 1000); 
 
     const customUrlStore= useCustomUrlStore()
 
     customUrlStore.$onAction(({name:customUrl, args})=>{
-      const url = args[0]      
-      this.apiService.baseUrl = url
-      this.customUrl = url
+      this.serverActivityService = new ServerActivityService(this.customUrlStore.getApiService)
 
       this.getData();
     }, true)
-
-    this.getCustomUrlFromStorage();
-
-    this.apiService.baseUrl = customUrlStore.getCustomUrl as string
-    this.serverActivityService = new ServerActivityService(this.apiService)
-
   },
-  mounted() {
-    this.getData();
-  },
+  beforeUnmount(){
+    console.log("--------------a-a-a-a-a-aa-a")
+    clearInterval(this.timer)
+  }
 });
 </script>
