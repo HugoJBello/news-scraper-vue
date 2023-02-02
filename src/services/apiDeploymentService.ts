@@ -8,6 +8,7 @@ import { get } from "lodash";
 import { LocalStorageService } from "./localStorageService";
 
 import Buffer from "buffer"
+import { ApiService } from "./apiService";
 //https://api.github.com/repos/HugoJBello/news-scraper-api/contents/current_deployment.json
 
 //https://raw.githubusercontent.com/HugoJBello/news-scraper-api/main/current_deployment.json
@@ -42,6 +43,15 @@ export class ApiDeploymentService {
   };
 
   static getLastDeploymentUrl =  async (): Promise<string> => {
+
+    const url = LocalStorageService.getCustomUrl()
+    const api = new ApiService(url as string)
+
+    const isAlreadyWorking = await api.findGlobalConfig(undefined)
+    if (isAlreadyWorking){
+      return url as string
+    }
+
     try{
       const currentInfo = await this.getFromGithubApi()
       console.log(currentInfo)
