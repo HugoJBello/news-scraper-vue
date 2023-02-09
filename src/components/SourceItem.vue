@@ -132,7 +132,10 @@ export default defineComponent({
   },
   created() {
     this.customUrlStore.$onAction(({name:customUrl, args})=>{
-     this.getData()
+      const url = args[0]      
+      this.customUrlStore.getApiService.baseUrl = url
+       
+      this.getData()
     }, true)
   },
   mounted() {

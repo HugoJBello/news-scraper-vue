@@ -153,9 +153,14 @@ export default defineComponent({
 
     const customUrlStore= useCustomUrlStore()
     customUrlStore.$onAction(({name:customUrl, args})=>{
+      const url = args[0]      
+      this.customUrlStore.getApiService.baseUrl = url
+       
       this.getData(this.selectedScraper.getSelectedScraper as string | undefined);
 
     }, true)
+
+ 
 
     this.getData(this.selectedScraper.getSelectedScraper as string | undefined);
   },

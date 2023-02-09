@@ -28,6 +28,18 @@ const router = createRouter({
       component: ServerMenu,
     },
   ],
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(savedPosition)
+        }, 4000)
+      })
+    } else {
+      return { left: 0, top: 0 }
+    }
+    
+  },
 });
 
 export default router;
