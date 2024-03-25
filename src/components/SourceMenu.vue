@@ -108,18 +108,9 @@ export default defineComponent({
         console.log("getdata ", scraperId)
         const newspaper = (this.$route.params.newspaper as string).replace("_", ".");
  
-  
-        this.index = await this.customUrlStore.getApiService.getIndex(newspaper, scraperId);
-
-        const newsIds = this.index.currentScrapingIdList
-        console.log(this.index)
-
-        const news:Promise<NewScrapedI>[] = newsIds.map(id => this.customUrlStore.getApiService.getNewsItem(id))
-         
-
-        if (news){
-        this.news = await Promise.all(news);
-        }
+        const results = await this.customUrlStore.getApiService.getResultsInNewspaper(newspaper)
+        this.index = results.scrapingIndex
+        this.news = results.news         
 
         this.news = this.news.filter(item => !!item )
 

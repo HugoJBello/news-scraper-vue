@@ -11,7 +11,6 @@ import { defineComponent } from "vue";
 import { mapActions } from "pinia";
 import { ApiService } from "@/services/apiService";
 import { useCustomUrlStore } from "@/stores/customUrl";
-import { ApiDeploymentService } from "@/services/apiDeploymentService";
 
 export default defineComponent({
   setup(){
@@ -27,14 +26,6 @@ export default defineComponent({
     };
   },
   methods: {
-    async setDefaultApiUrlFromGithub(){
-     const url = await ApiDeploymentService.getLastDeploymentUrl()
-     console.log(url)
-     if (await this.isActiveUrl(url)){
-      this.selectCustomUrl(url)
-     }
-    },
-
     async isActiveUrl(url:string){
       try{
         this.apiService.baseUrl = url
@@ -51,10 +42,6 @@ export default defineComponent({
   },
 
   created() {
-    console.log("------------------")
-    this.setDefaultApiUrlFromGithub();
-
-
   }
 });
 </script>

@@ -16,12 +16,13 @@ const config = {
 
 
 export class ApiService {
-  public baseUrl = null as null | string
-  constructor(baseUrl?: string) {
+  public baseUrl = ""
+  constructor(customUrl: string) {
     
-    if (baseUrl){
-      this.baseUrl = baseUrl
-    }
+    if (customUrl){
+      this.baseUrl = customUrl
+    } 
+    console.log(this.baseUrl)
   }
 
   getAllIndexes = async (): Promise<ScrapingIndexI[]> => {
@@ -59,12 +60,16 @@ export class ApiService {
     return get(resp, "data.payload.rows[0]") as ScrapingIndexI;
   };
 
-
-
   getNewsItem = async (id: string): Promise<NewScrapedI> => {
     const url = this.baseUrl + "/api/v1/newScraped/findQuery?&limit=1&id=" + id;
     const resp = await axios.get(url, config);
     return get(resp, "data.payload.rows")[0];
+  };
+
+  getResultsInNewspaper = async (newspaper: string): Promise<NewScrapedI> => {
+    const url = this.baseUrl + "/api/v1/resultsInNewspaper/find?newspaper=" + newspaper;
+    const resp = await axios.get(url, config);
+    return get(resp, "data.payload");
   };
 
   //https://walrus-app-kitxm.ondigitalocean.app/news-scraper-api2/api/v1/newScraped/findNewsInDay?newspaper=eldiario.es&day=2022-09-14&orderCriteria=priority&daysInterval=2
