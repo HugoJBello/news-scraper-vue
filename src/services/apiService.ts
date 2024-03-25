@@ -17,7 +17,7 @@ const config = {
 
 export class ApiService {
   public baseUrl = ""
-  constructor(customUrl: string) {
+  constructor(customUrl: string|null) {
     
     if (customUrl){
       this.baseUrl = customUrl

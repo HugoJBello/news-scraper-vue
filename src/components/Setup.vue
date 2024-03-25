@@ -15,7 +15,7 @@ import { useCustomUrlStore } from "@/stores/customUrl";
 export default defineComponent({
   setup(){
     const customUrlStore= useCustomUrlStore();
-    const apiService = new ApiService()
+    const apiService = new ApiService(null)
     return {customUrlStore, apiService}
   },
   data() {
