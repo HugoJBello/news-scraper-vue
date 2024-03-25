@@ -111,7 +111,7 @@ export default defineComponent({
         const results = await this.customUrlStore.getApiService.getResultsInNewspaper(newspaper)
         this.index = results.scrapingIndex
         this.news = results.news         
-
+        this.news.sort((a, b) => a.newsIndex - b.newsIndex)
         this.news = this.news.filter(item => !!item )
 
         console.log(scraperId)
