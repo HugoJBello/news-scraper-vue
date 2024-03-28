@@ -65,10 +65,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { ApiService } from "../services/apiService";
 import type { NewScrapedI } from "@/models/NewScraped";
 
-import { findCurrentNewsUsingIndex } from "../services/newsInDayFilterService";
 import { useSelectedScraperStore } from "@/stores/selectedScraper";
 
 import NavbarSource from "./NavbarSource.vue";

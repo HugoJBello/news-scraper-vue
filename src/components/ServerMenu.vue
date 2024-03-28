@@ -14,7 +14,9 @@
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item"><b>Last item scraped:</b> {{ lastGlobalConfig?.lastNewspaper }}</li>
+          <li class="list-group-item"><b>Last log:</b> {{ lastGlobalConfig?.lastLog }}</li>
           <li class="list-group-item"><b>Scraper Id:</b> {{ lastGlobalConfig?.scraperId }}</li>
+          <li class="list-group-item"><b>Global iteration:</b> {{ lastGlobalConfig?.globalIteration }}</li>
           <li class="list-group-item"><b>last activity:</b> {{ getLastActivity()}}</li>
           <li class="list-group-item"><b>active since</b> {{ getActiveSince()}}</li>
 
