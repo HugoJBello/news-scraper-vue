@@ -14,12 +14,40 @@
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item"><b>Last item scraped:</b> {{ lastGlobalConfig?.lastNewspaper }}</li>
-          <li class="list-group-item"><b>Last log:</b> {{ lastGlobalConfig?.lastLog }}</li>
+          <li class="list-group-item">
+            <b>Last log:</b> {{ getLastLog() }}
+          
+            <!-- Button trigger modal -->
+          <p><button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            logs
+          </button>
+          </p>
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Logs</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p v-for="log in logs">
+                    {{ log }}
+                  </p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          </li>
           <li class="list-group-item"><b>Scraper Id:</b> {{ lastGlobalConfig?.scraperId }}</li>
           <li class="list-group-item"><b>Global iteration:</b> {{ lastGlobalConfig?.globalIteration }}</li>
           <li class="list-group-item"><b>last activity:</b> {{ getLastActivity()}}</li>
           <li class="list-group-item"><b>active since</b> {{ getActiveSince()}}</li>
-
+ 
         </ul>
     </div>
       
@@ -120,6 +148,7 @@ export default defineComponent({
       customUrl: (this.customUrlStore as any).getCustomUrl as undefined | string,
       publicPath: window.location.origin,
       isActive: false,
+      logs: [] as string[] | any,
       selectedScraper: "" as string,
       allScrapers: [] as string[],
       lastGlobalConfig: {} as GlobalConfigI | undefined,
@@ -133,6 +162,13 @@ export default defineComponent({
         if (this.allScrapers) {
           this.selectedScraper = this.allScrapers[0] as string;
         }
+      }
+    },
+    getLastLog(){
+      if (this.lastGlobalConfig?.lastLog && this.lastGlobalConfig?.lastLog.includes("\n")) {
+        const splitted =  this.lastGlobalConfig?.lastLog.split("\n")  
+        this.logs = splitted as string[]
+        return splitted[splitted.length-1]
       }
     },
     getLastActivity(){
