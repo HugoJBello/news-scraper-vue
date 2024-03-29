@@ -28,9 +28,9 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <h1 class="modal-title fs-5" id="exampleModalLabel">Logs</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <button type="button" class="btn-close" @click="getLogs()" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" v-if="logs.length>0">
                   <p v-for="log in logs">
                     {{ log }}
                   </p>
@@ -167,8 +167,16 @@ export default defineComponent({
     getLastLog(){
       if (this.lastGlobalConfig?.lastLog && this.lastGlobalConfig?.lastLog.includes("\n")) {
         const splitted =  this.lastGlobalConfig?.lastLog.split("\n")  
-        this.logs = splitted as string[]
         return splitted[splitted.length-1]
+      }
+    },
+    getLogs(){
+      console.log("--")
+      if (this.lastGlobalConfig?.lastLog && this.lastGlobalConfig?.lastLog.includes("\n")) {
+        const splitted =  this.lastGlobalConfig?.lastLog.split("\n")  
+        this.logs = splitted as string[]
+        console.log(this.logs)
+        this.$forceUpdate()
       }
     },
     getLastActivity(){
