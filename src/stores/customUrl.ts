@@ -2,7 +2,8 @@ import { ApiService } from "@/services/apiService";
 import { defineStore } from "pinia";
 
 //const baseUrl = "http://localhost:3001/news"
-const baseUrl = "https://fistular-olm-5800.dataplicity.io/news"
+//const baseUrl = "https://fistular-olm-5800.dataplicity.io/news"
+const baseUrl = "https://dinosaur-glorious-bear.ngrok-free.app/news"
 //const baseUrl = "https://pettier-kiwi-7067.dataplicity.io/news"
 export const useCustomUrlStore = defineStore({
   // id is required so that Pinia can connect the store to the devtools
