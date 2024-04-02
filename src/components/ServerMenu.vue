@@ -153,6 +153,7 @@ export default defineComponent({
       allScrapers: [] as string[],
       lastGlobalConfig: {} as GlobalConfigI | undefined,
       timer: null as any | undefined,
+      autoUpdate: false
     };
   },
   methods: {
@@ -250,10 +251,12 @@ export default defineComponent({
     this.serverActivityService = new ServerActivityService(this.customUrlStore.getApiService)
     this.getData()
     this.getScrapers();
-
-    this.timer = setInterval(() =>{
+    if (this.autoUpdate){
+      this.timer = setInterval(() =>{
       this.getData();
-    }, 1000); 
+    }, 1000);
+    }
+ 
 
     const customUrlStore= useCustomUrlStore()
 
@@ -264,7 +267,6 @@ export default defineComponent({
     }, true)
   },
   beforeUnmount(){
-    console.log("--------------a-a-a-a-a-aa-a")
     clearInterval(this.timer)
   }
 });
